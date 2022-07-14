@@ -1,0 +1,22 @@
+{
+  "name": "bitcoin-browser",
+  "version": "1.0.0",
+  "description": "bitcoin libary which uses low level browser crypto",
+  "main": "index.js",
+  "devDependencies": {
+    "vite": "^2.9.9"
+  },
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@noble/secp256k1": "^1.6.0",
+    "bech32": "^2.0.0",
+    "bitcoinlib": "^1.0.2"
+  }
+}
