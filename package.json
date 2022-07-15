@@ -4,6 +4,8 @@
   "description": "bitcoin libary which uses low level browser crypto",
   "main": "index.js",
   "devDependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0",
     "vite": "^2.9.9"
   },
   "scripts": {
