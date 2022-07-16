@@ -1,5 +1,5 @@
 import chai from "chai";
-import { numberfrombytes, hexfrombytes, hextobytes } from "../src/helper";
+import { numberfromhex, numberfrombytes, hexfrombytes, hextobytes } from "../src/helper";
 
 
 describe(`Helpers:`, () => {
@@ -11,16 +11,6 @@ describe(`Helpers:`, () => {
     it('expect 255,255,255,255 to equal ffffffff', () => {
       let bytes = [255,255,255,255];
       chai.expect(hexfrombytes(bytes)).to.equal("ffffffff");
-    });
-  });
-  describe(`numberfrombytes`, () => {
-    it('expect 0,0,0,1 to equal 1', () => {
-      let bytes = [0,0,0,1];
-      chai.expect(numberfrombytes(bytes)).to.equal(1);
-    });
-    it('expect 255,255 to equal 65535', () => {
-      let bytes = [255,255];
-      chai.expect(numberfrombytes(bytes)).to.equal(65535);
     });
   });
   describe(`hextobytes(ff)`, () => {
@@ -45,6 +35,26 @@ describe(`Helpers:`, () => {
     });
     it('expect ffff to equal 65535', () => {
       chai.expect(numberfrombytes(bytes)).to.equal(65535);
+    });
+  });
+  describe(`numberfrombytes`, () => {
+    it('expect 0,0,0,1 to equal 1', () => {
+      let bytes = [0,0,0,1];
+      chai.expect(numberfrombytes(bytes)).to.equal(1);
+    });
+    it('expect 255,255 to equal 65535', () => {
+      let bytes = [255,255];
+      chai.expect(numberfrombytes(bytes)).to.equal(65535);
+    });
+  });
+  describe(`numberfromhex`, () => {
+    it('expect ffff to equal 65535', () => {
+      chai.expect(numberfromhex("ffff")).to.equal(65535);
+      chai.expect(numberfromhex("ffff")).to.equal(0xffff);
+    });
+    it('expect 0001 to equal 1', () => {
+      chai.expect(numberfromhex("0001")).to.equal(1);
+      chai.expect(numberfromhex("0001")).to.equal(0x0001);
     });
   });
 });

@@ -1,4 +1,4 @@
-let loglevel = 2;
+let loglevel = 0;
 let loglevels = [ "INFO", "DEBUG", "VERBOSE" ];
 
 export const logger = (log, lvl = 0) => {
@@ -26,6 +26,10 @@ export const hexfrombytes = (bytes) => {
     hex += bytes[i].toString(16).padStart(2, 0);
   }
   return hex;
+}
+
+export const numberfromhex = (hex) => {
+  return parseInt(hex, 16);
 }
 
 export const numberfrombytes = (bytes) => {
