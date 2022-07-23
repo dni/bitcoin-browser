@@ -1,4 +1,4 @@
-let loglevel = 0;
+let loglevel = 2;
 let loglevels = [ "INFO", "DEBUG", "VERBOSE" ];
 
 export const logger = (log, lvl = 0) => {
@@ -10,6 +10,10 @@ export const logger = (log, lvl = 0) => {
     }
   }
 }
+
+export const randombytes = (length) => {
+  return crypto.getRandomValues(new Uint8Array(32));
+};
 
 export const hextobytes = (hex) => {
   let binary = [];
@@ -34,4 +38,16 @@ export const numberfromhex = (hex) => {
 
 export const numberfrombytes = (bytes) => {
   return parseInt(hexfrombytes(bytes), 16);
+}
+
+export const numberfrombyte = (byte) => {
+  return parseInt(byte, 16);
+}
+
+export const create_enums = (values) => {
+  const enumObject = {};
+  for (const val of values) {
+    enumObject[val] = val;
+  }
+  return Object.freeze(enumObject);
 }

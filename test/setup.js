@@ -1,1 +1,1 @@
-mocha.setup('bdd');
+mocha.setup({ui: 'bdd'});

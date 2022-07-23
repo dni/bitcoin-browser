@@ -1,35 +1,8 @@
 import * as secp from "@noble/secp256k1";
 import { bech32 } from "bech32";
-import { sha256Digest, sha256HexDigest } from "./crypto";
+import { sha256, sha256hex} from "./hashing";
 
 export const SIGHASH_ALL = 1;
-
-export class PrivateKey {
-  constructor() {
-    this.privateKey = secp.utils.randomPrivateKey();
-  }
-  async message(msg) {
-    return await sha256HexDigest(msg);
-  }
-  async sign(msg) {
-    return await secp.sign(this.message(msg), this.privateKey);
-  }
-  verify(signature, messageHash) {
-    return secp.verify(signature, messageHash, this.pubkey());
-  }
-  pubkey() {
-    return secp.getPublicKey(this.privateKey);
-  }
-}
-
-export class Script {
-  constructor(script) {
-    this.script = script
-  }
-  pubkey() {
-    return "pub key";
-  }
-}
 
 export class Witness {
   constructor(script) {
@@ -123,29 +96,4 @@ export class TransactionOutput {
     this.amount = amount;
     this.script_pubkey = script_pubkey;
   }
-}
-
-export const addressToScriptPubkey = (address) => {
-  // bech 32 address
-  try {
-    let data = bech32.decode(address);
-    console.log(data);
-    //# OP_1..OP_N
-    //if ver > 0:
-    //    ver += 0x50
-    return new Script(data.prefix + data.words.length + data.words);
-  } catch(err) {
-    console.log("ERROR: invalid bech32 address", err);
-    return null;
-  }
-// def address_to_scriptpubkey(addr):
-//     # try with base58 address
-//     try:
-//         data = base58.decode_check(addr)
-//         prefix = data[:1]
-//         for net in NETWORKS.values():
-//             if prefix == net["p2pkh"]:
-//                 return Script(b"\x76\xa9\x14" + data[1:] + b"\x88\xac")
-//             elif prefix == net["p2sh"]:
-//                 return Script(b"\xa9\x14" + data[1:] + b"\x87")
 }

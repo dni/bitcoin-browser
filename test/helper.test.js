@@ -1,5 +1,5 @@
 import chai from "chai";
-import { numberfromhex, numberfrombytes, hexfrombytes, hextobytes } from "../src/helper";
+import { numberfromhex, numberfrombytes, numberfrombyte, hexfrombytes, hextobytes } from "../src/helper";
 
 
 describe(`Helpers:`, () => {
@@ -35,6 +35,20 @@ describe(`Helpers:`, () => {
     });
     it('expect ffff to equal 65535', () => {
       chai.expect(numberfrombytes(bytes)).to.equal(65535);
+    });
+  });
+  describe(`numberfrombyte`, () => {
+    it('expect 0 to equal 0', () => {
+      let byte = 0;
+      chai.expect(numberfrombyte(byte)).to.equal(0);
+    });
+    it('expect 11 to equal 17', () => {
+      let byte = 11;
+      chai.expect(numberfrombyte(byte)).to.equal(17);
+    });
+    it('expect 255 to equal 597', () => {
+      let byte = 255;
+      chai.expect(numberfrombyte(byte)).to.equal(597);
     });
   });
   describe(`numberfrombytes`, () => {

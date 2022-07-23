@@ -1,10 +1,54 @@
 export const scripts = [{
-  name: "Boltz Lockup Output 0",
-  hex: "00148699f5c59f931c0f0db92937bf5872942e6848f5",
-  address: "bcrt1qs6vlt3vljvwq7rde9ymm7krjjshxsj84yvlunq",
-  type: "witness_v0_keyhash"
+  // name: "P2PK",
+  // scriptPubKey: "4104ae1a62fe09c5f51b13905f07f06b99a2f7159b2225f374cd378d71302fa28414e7aab37397f554a7df5f142c21c1b7303b8a0626f1baded5c72a704f7e6cd84cac",
+  // scriptSig: "47304402204e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd410220181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d0901",
+  // type: "pubkey",
+  // p2sh: "2N8dmHTPPcZyW9nmsdjdp3Q58hC5rcqqVFe"
+
+  // asm: "04ae1a62fe09c5f51b13905f07f06b99a2f7159b2225f374cd378d71302fa28414e7aab37397f554a7df5f142c21c1b7303b8a0626f1baded5c72a704f7e6cd84c OP_CHECKSIG",
+  // hex: "4104ae1a62fe09c5f51b13905f07f06b99a2f7159b2225f374cd378d71302fa28414e7aab37397f554a7df5f142c21c1b7303b8a0626f1baded5c72a704f7e6cd84cac",
+  // p2sh: "2MvH6niu9rdcrrjSVBcDmvBXYLNsGNyGsj8",
+  // type: "pubkey"
+  // name: "P2PK - Pre Segwit, Ouput 0",
+  // asm: "04ae1a62fe09c5f51b13905f07f06b99a2f7159b2225f374cd378d71302fa28414e7aab37397f554a7df5f142c21c1b7303b8a0626f1baded5c72a704f7e6cd84c OP_CHECKSIG",
+  // hex: "4104ae1a62fe09c5f51b13905f07f06b99a2f7159b2225f374cd378d71302fa28414e7aab37397f554a7df5f142c21c1b7303b8a0626f1baded5c72a704f7e6cd84cac",
+  // p2sh: "2MvH6niu9rdcrrjSVBcDmvBXYLNsGNyGsj8",
+  // type: "pubkey"
+// }, {
+  // name: "Pre Segwit, Ouput 1 P2PK",
+  // asm: "0411db93e1dcdb8a016b49840f8c53bc1eb68a382e97b1482ecad7b148a6909a5cb2e0eaddfb84ccf9744464f82e160bfa9b8b64f9d4c03f999b8643f656b412a3 OP_CHECKSIG",
+  // hex: "410411db93e1dcdb8a016b49840f8c53bc1eb68a382e97b1482ecad7b148a6909a5cb2e0eaddfb84ccf9744464f82e160bfa9b8b64f9d4c03f999b8643f656b412a3ac",
+  // p2sh: "2NDg4YXHPaztnCPcuzTpUxdL5QCHMwXtcAr",
+  // type: "pubkey"
+// }, {
+  // name: "P2SH - Script PubKey",
+  // hex: "a914748284390f9e263a4b766a75d0633c50426eb87587",
+  // asm: "OP_HASH160 748284390f9e263a4b766a75d0633c50426eb875 OP_EQUAL",
+  // address: "2N3sGiyscxqd3r6DQSbgXT738ZwhUpBqkej",
+  // type: "scripthash"
+// }, {
+  name: "P2PKH - Pay to Pubkey Hash",
+  hex: "76a914fde0a08625e327ba400644ad62d5c571d2eec3de88ac",
+  asm: "OP_DUP OP_HASH160 fde0a08625e327ba400644ad62d5c571d2eec3de OP_EQUALVERIFY OP_CHECKSIG",
+  address: "n4fLLwwAoocPEWc6a2UJ6LPiwco4D81zxE",
+  type: "pubkeyhash",
+  p2sh: "2MtuxC6SR4aNAbHh8zg27PfgvvYFdWU1kZn",
+  segwit: {
+    asm: "0 fde0a08625e327ba400644ad62d5c571d2eec3de",
+    hex: "0014fde0a08625e327ba400644ad62d5c571d2eec3de",
+    address: "bcrt1qlhs2pp39uvnm5sqxgjkk94w9w8fwas77s8fy6x",
+    type: "witness_v0_keyhash",
+    "p2sh-segwit": "2N2rhwXNgMR83XY2Un14a2rTe4WvDtq8KVV"
+  }
+// }, {
+  // name: "Boltz Lockup Output 0",
+  // asm: "0 8699f5c59f931c0f0db92937bf5872942e6848f5",
+  // hex: "00148699f5c59f931c0f0db92937bf5872942e6848f5",
+  // address: "bcrt1qs6vlt3vljvwq7rde9ymm7krjjshxsj84yvlunq",
+  // type: "witness_v0_keyhash"
 }];
-export const transactions = [{
+export const transactions = [];
+export const transactions2 = [{
   name: "Pre Segwit",
   raw: "0100000001c997a5e56e104102fa209c6a852dd90660a20b2d9c352423edce25857fcd3704000000004847304402204e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd410220181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d0901ffffffff0200ca9a3b00000000434104ae1a62fe09c5f51b13905f07f06b99a2f7159b2225f374cd378d71302fa28414e7aab37397f554a7df5f142c21c1b7303b8a0626f1baded5c72a704f7e6cd84cac00286bee0000000043410411db93e1dcdb8a016b49840f8c53bc1eb68a382e97b1482ecad7b148a6909a5cb2e0eaddfb84ccf9744464f82e160bfa9b8b64f9d4c03f999b8643f656b412a3ac00000000",
   data: {

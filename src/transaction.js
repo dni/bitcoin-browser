@@ -1,5 +1,5 @@
 import opcodes from "./opcode";
-import { logger, numberfromhex, numberfrombytes, hexfrombytes, hextobytes } from "../src/helper";
+import { logger, numberfromhex, numberfrombytes, hexfrombytes, hextobytes } from "./helper";
 import { Script } from "./script";
 
 export class TransactionDecoder {
