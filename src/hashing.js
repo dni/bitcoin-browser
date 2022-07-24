@@ -31,7 +31,8 @@ export const hash160 = async (data) => {
   let b = await sha256(a);
   let c = await ripemd160(a);
   let d = hexfrombytes(c);
-  console.log(a, b, c, d);
+  let e = btoa(d);
+    console.log(a, b, c, d, e);
   return d;
 }
 
