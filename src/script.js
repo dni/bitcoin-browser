@@ -225,12 +225,15 @@ export class Script {
         //   return hash160(this.pubkey);
         case TxoutType.PUBKEYHASH:
           console.log("raw", this.pubkeyhash);
-
-          let x = new Uint8Array(25);
-          x.set(this.network.p2pkh);
-          x.set(this.pubkeyhash, 1);
-          x.set((await sha256(Uint8Array.from(this.pubkeyhash))), 21);
-          return b58lify(x);
+          this.address = this.pubkeyhash;
+          this.address.unshift(this.network.p2pkh);
+          console.log("after unshift", this.address);
+          // let checksum = await sha256(Uint8Array.from(this.address));
+          // this.address.push(checksum);
+          console.log("promise", this.address);
+          this.address = b58lify(this.address);
+          console.log("empty", this.address);
+          // return this.address;
           // return hash160(this.pubkeyhash, this.network);
       }
       // case TxoutType.SCRIPTHASH: {
