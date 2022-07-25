@@ -1,5 +1,5 @@
 import opcodes from "./opcode";
-import {  hash160, b58lify, unb58lify } from "./hashing";
+import {  hash160, b58lify, unb58lify, sha256, double_sha256 } from "./hashing";
 import { NET } from "./network";
 import { logger, create_enums, numberfrombyte, hextobytes, hexfrombytes } from "./helper";
 
@@ -45,6 +45,7 @@ export class Script {
       this.network = NET[network];
     }
 
+    console.log(this.network);
     if (typeof script == "string") {
       this.script = hextobytes(script);
     } else {
@@ -215,7 +216,7 @@ export class Script {
     }
     return stack.join(" ");
   }
-  ExtractDestination() {
+  async ExtractDestination() {
       switch (this.type) {
         // case TxoutType.PUBKEY:
         //   if (!Pubkey.IsValid(this.pubkey)) {
@@ -224,7 +225,13 @@ export class Script {
         //   return hash160(this.pubkey);
         case TxoutType.PUBKEYHASH:
           console.log("raw", this.pubkeyhash);
-          return hash160(this.script);
+
+          let x = new Uint8Array(25);
+          x.set(this.network.p2pkh);
+          x.set(this.pubkeyhash, 1);
+          x.set((await sha256(Uint8Array.from(this.pubkeyhash))), 21);
+          return b58lify(x);
+          // return hash160(this.pubkeyhash, this.network);
       }
       // case TxoutType.SCRIPTHASH: {
       //     addressRet = ScriptHash(uint160(vSolutions[0]));

@@ -21,18 +21,23 @@ export const sha256 = async (data) => {
   return hash;
 }
 
-export const double_sha256 = async (message) => {
+export const double_sha256 = async (data) => {
   return sha256(await sha256(data))
 }
 
-export const hash160 = async (data) => {
+export const hash160 = async (data, network) => {
   let a = Uint8Array.from(data);
   // let b = await secp.utils.sha256(a);
   let b = await sha256(a);
   let c = await ripemd160(a);
-  let d = hexfrombytes(c);
-  let e = btoa(d);
-    console.log(a, b, c, d, e);
-  return d;
+  let hash = await sha256(await sha256(c));
+  // let d = hexfrombytes(c);
+  // let e = btoa(d);
+  // let x = c.unshift(network["p2pkh"]);
+  let y = new Uint8Array(25);
+  y.set(network.p2pkh, 0);
+  y.set(c, 1);
+  y.set(hash.slice(0, 3), 21);
+  return b58lify(y);
 }
 
