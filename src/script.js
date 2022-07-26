@@ -1,4 +1,5 @@
 import opcodes from "./opcode";
+import { bech32 } from "bech32";
 import {  hash160, b58lify, unb58lify, sha256, checksum, double_sha256 } from "./hashing";
 import { NET } from "./network";
 import { logger, create_enums, numberfrombyte, hextobytes, hexfrombytes } from "./helper";
@@ -16,6 +17,10 @@ export const TxoutType = {
   WITNESS_V1_TAPROOT:    "witness_v1_taproot",
   WITNESS_UNKNOWN:       "witness_unknown"
 };
+
+const WITNESS_V0_KEYHASH_SIZE = 20;
+const WITNESS_V0_SCRIPTHASH_SIZE = 32;
+const WITNESS_V1_TAPROOT_SIZE = 32;
 
 // https://github.com/bitcoin/bitcoin/blob/master/src/pubkey.h#L39
 const PubKey = {
@@ -115,13 +120,19 @@ export class Script {
     if (this.script.length < 4 || this.script.length > 42) {
       return false;
     }
+    let op_n = this.script[0];
     if (this.script[0] != opcodes.OP_0
-      && this.script[0] < opcodes.OP_1
-      || this.script[0] > opcodes.OP_16) {
+      && (this.script[0] < opcodes.OP_1 || this.script[0] > opcodes.OP_16)) {
       return false;
     }
     if ((this.script[1] + 2) == this.script.length) {
-      // this.witnessversion = DecodeOP_N((opcodetype)(*this)[0]);
+      if (op_n == opcodes.OP_FALSE) {
+        console.log("version", 0);
+        this.witnessversion = 0;
+      }
+      if (op_n >= opcodes.OP_1 && op_n <= opcodes.OP_16) {
+        this.witnessversion = op_n - (opcodes.OP_1 - 1);
+      }
       this.witnessprogram = this.script.slice(2);
       return true;
     }
@@ -217,36 +228,31 @@ export class Script {
   }
   async ExtractDestination() {
       let address = [];
+      let words = [];
       switch (this.type) {
-        case TxoutType.PUBKEY:
-          if (!Pubkey.IsValid(this.pubkey)) {
-            return false;
-          }
-          address = this.pubkey;
-          address.unshift(this.network.p2pk);
-          address.push(...(await checksum(address)))
-          return b58lify(address);
         case TxoutType.PUBKEYHASH:
           address = this.pubkeyhash;
           address.unshift(this.network.p2pkh);
           address.push(...(await checksum(address)))
           return b58lify(address);
         case TxoutType.SCRIPTHASH:
-          // addressRet = ScriptHash(uint160(vSolutions[0]));
-          return true;
+          address = this.script.slice(2, 22);
+          address.unshift(this.network.p2sh);
+          address.push(...(await checksum(address)))
+          return b58lify(address);
+        case TxoutType.WITNESS_V0_KEYHASH:
+          words = bech32.toWords(this.witnessprogram);
+          words.unshift(this.witnessversion);
+          return bech32.encode(this.network.bech32, words);
+        case TxoutType.WITNESS_V0_SCRIPTHASH:
+          words = bech32.toWords(this.witnessprogram);
+          words.unshift(this.witnessversion);
+          return bech32.encode(this.network.bech32, words);
+        case TxoutType.WITNESS_UNKNOWN:
+          words = bech32.toWords(this.witnessprogram);
+          words.unshift(this.witnessversion);
+          return bech32.encode(this.network.bech32, words);
       }
-      // case TxoutType.WITNESS_V0_KEYHASH: {
-      //     WitnessV0KeyHash hash;
-      //     std.copy(vSolutions[0].begin(), vSolutions[0].end(), hash.begin());
-      //     addressRet = hash;
-      //     return true;
-      // }
-      // case TxoutType.WITNESS_V0_SCRIPTHASH: {
-      //     WitnessV0ScriptHash hash;
-      //     std.copy(vSolutions[0].begin(), vSolutions[0].end(), hash.begin());
-      //     addressRet = hash;
-      //     return true;
-      // }
       // case TxoutType.WITNESS_V1_TAPROOT: {
       //     WitnessV1Taproot tap;
       //     std.copy(vSolutions[0].begin(), vSolutions[0].end(), tap.begin());

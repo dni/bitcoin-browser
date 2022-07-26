@@ -1,5 +1,4 @@
 import * as secp from "@noble/secp256k1";
-// import { bech32 } from "bech32";
 import { sha256, sha256hex} from "./hashing";
 
 export class PrivateKey {

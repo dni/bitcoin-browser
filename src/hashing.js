@@ -1,6 +1,7 @@
 import ripemd160 from 'ripemd160-js'
 import * as secp from "@noble/secp256k1";
 import { hexfrombytes } from './helper'
+import { bech32 } from "bech32";
 
 //
 // https://gist.github.com/diafygi/90a3e80ca1c2793220e5/

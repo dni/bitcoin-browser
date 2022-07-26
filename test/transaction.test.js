@@ -40,12 +40,6 @@ transactions.forEach((tx) => {
           it(`scriptSig.hex should equal to ${input.scriptSig.hex}`, () => {
             chai.expect(decoder.tx.vin[j].scriptSig.hex).to.equal(input.scriptSig.hex);
           });
-          // it(`scriptSig.asm should equal to ${input.scriptSig.asm}`, () => {
-          //   chai.expect(decoder.tx.vin[j].scriptSig.asm).to.equal(input.scriptSig.asm);
-          // });
-          it(`scriptSig.type should equal to ${input.scriptSig.type}`, () => {
-            chai.expect(decoder.tx.vin[j].scriptSig.type).to.equal(input.scriptSig.type);
-          });
           it(`sequence_number should equal to ${input.sequence}`, () => {
             chai.expect(decoder.tx.vin[j].sequence_number).to.equal(input.sequence);
           });

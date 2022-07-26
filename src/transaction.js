@@ -19,7 +19,7 @@ export class TransactionDecoder {
   parsescript(script){
     let s = new Script(script);
     return {
-      asm: script,
+      asm: s,
       hex: hexfrombytes(script),
       type: s.type,
       address: s.address,
@@ -84,8 +84,8 @@ export class TransactionDecoder {
         let script_size = this.parsevarint();
         logger(`VarInt | input ${i} script_size: ${script_size}`,2);
         let script = this.parsebytes(script_size);
-        // input.scriptSig = this.parsescript(script);
-        // logger(`${script_size} bytes | input ${i} scriptSig: ${input.scriptSig.hex}`, 1);
+        input.scriptSig = this.parsescript(script);
+        logger(`${script_size} bytes | input ${i} scriptSig: ${input.scriptSig.hex}`, 1);
         input.sequence = this.parsebytes(4).reverse();
         input.sequence_hex = hexfrombytes(input.sequence);
         input.sequence_number = numberfrombytes(input.sequence);
@@ -107,8 +107,8 @@ export class TransactionDecoder {
         let script_pub_key_size = this.parsevarint();
         logger(`VarInt | output ${i} script_pub_key_size: ${script_pub_key_size}`, 2);
         let script = this.parsebytes(script_pub_key_size);
-        // output.scriptPubKey = this.parsescript(script);
-        // logger(`${script_pub_key_size} bytes | output ${i} script_pub_key: ${output.script_pub_key_hex}`, 1);
+        output.scriptPubKey = this.parsescript(script);
+        logger(`${script_pub_key_size} bytes | output ${i} script_pub_key: ${output.scriptPubKey.hex}`, 1);
         this.tx.vout.push(output);
       }
     }

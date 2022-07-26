@@ -3,19 +3,22 @@ export const scripts = [{
   hex: "a914748284390f9e263a4b766a75d0633c50426eb87587",
   asm: "OP_HASH160 748284390f9e263a4b766a75d0633c50426eb875 OP_EQUAL",
   address: "2N3sGiyscxqd3r6DQSbgXT738ZwhUpBqkej",
-  type: "scripthash"
+  type: "scripthash",
+  network: "test"
 }, {
   name: "P2PKH - Pay to Pubkey Hash",
   asm: "OP_DUP OP_HASH160 9f21a07a0c7c3cf65a51f586051395762267cdaf OP_EQUALVERIFY OP_CHECKSIG",
   hex: "76a9149f21a07a0c7c3cf65a51f586051395762267cdaf88ac",
   address: "mv2N1zPzvGDXJhZoRkKoAE9EeJ1GYri1GH",
-  type: "pubkeyhash"
+  type: "pubkeyhash",
+  network: "test"
 }, {
   name: "Boltz Lockup Output 0",
-  asm: "0 8699f5c59f931c0f0db92937bf5872942e6848f5",
+  asm: "OP_FALSE 8699f5c59f931c0f0db92937bf5872942e6848f5",
   hex: "00148699f5c59f931c0f0db92937bf5872942e6848f5",
   address: "bcrt1qs6vlt3vljvwq7rde9ymm7krjjshxsj84yvlunq",
-  type: "witness_v0_keyhash"
+  type: "witness_v0_keyhash",
+  network: "regtest"
 }];
 
 export const transactions = [{
@@ -49,49 +52,6 @@ export const transactions = [{
           "hex": "76a9149f21a07a0c7c3cf65a51f586051395762267cdaf88ac",
           "address": "mv2N1zPzvGDXJhZoRkKoAE9EeJ1GYri1GH",
           "type": "pubkeyhash"
-        }
-      }
-    ]
-  }
-}, {
-  name: "Pre Segwit",
-  raw: "0100000001c997a5e56e104102fa209c6a852dd90660a20b2d9c352423edce25857fcd3704000000004847304402204e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd410220181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d0901ffffffff0200ca9a3b00000000434104ae1a62fe09c5f51b13905f07f06b99a2f7159b2225f374cd378d71302fa28414e7aab37397f554a7df5f142c21c1b7303b8a0626f1baded5c72a704f7e6cd84cac00286bee0000000043410411db93e1dcdb8a016b49840f8c53bc1eb68a382e97b1482ecad7b148a6909a5cb2e0eaddfb84ccf9744464f82e160bfa9b8b64f9d4c03f999b8643f656b412a3ac00000000",
-  data: {
-    "txid": "f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16",
-    "hash": "f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16",
-    "version": 1,
-    "size": 275,
-    "vsize": 275,
-    "weight": 1100,
-    "locktime": 0,
-    "vin": [
-      {
-        "txid": "0437cd7f8525ceed2324359c2d0ba26006d92d856a9c20fa0241106ee5a597c9",
-        "vout": 0,
-        "scriptSig": {
-          "asm": "304402204e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd410220181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d09[ALL]",
-          "hex": "47304402204e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd410220181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d0901"
-        },
-        "sequence": 4294967295
-      }
-    ],
-    "vout": [
-      {
-        "value": 10.00000000,
-        "n": 0,
-        "scriptPubKey": {
-          "asm": "04ae1a62fe09c5f51b13905f07f06b99a2f7159b2225f374cd378d71302fa28414e7aab37397f554a7df5f142c21c1b7303b8a0626f1baded5c72a704f7e6cd84c OP_CHECKSIG",
-          "hex": "4104ae1a62fe09c5f51b13905f07f06b99a2f7159b2225f374cd378d71302fa28414e7aab37397f554a7df5f142c21c1b7303b8a0626f1baded5c72a704f7e6cd84cac",
-          "type": "pubkey"
-        }
-      },
-      {
-        "value": 40.00000000,
-        "n": 1,
-        "scriptPubKey": {
-          "asm": "0411db93e1dcdb8a016b49840f8c53bc1eb68a382e97b1482ecad7b148a6909a5cb2e0eaddfb84ccf9744464f82e160bfa9b8b64f9d4c03f999b8643f656b412a3 OP_CHECKSIG",
-          "hex": "410411db93e1dcdb8a016b49840f8c53bc1eb68a382e97b1482ecad7b148a6909a5cb2e0eaddfb84ccf9744464f82e160bfa9b8b64f9d4c03f999b8643f656b412a3ac",
-          "type": "pubkey"
         }
       }
     ]

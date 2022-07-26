@@ -1,4 +1,4 @@
-let loglevel = 2;
+let loglevel = 0;
 let loglevels = [ "INFO", "DEBUG", "VERBOSE" ];
 
 export const logger = (log, lvl = 0) => {
