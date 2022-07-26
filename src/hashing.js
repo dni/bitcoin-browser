@@ -15,29 +15,23 @@ export const sha256hex = async (message) => {
 }
 
 export const sha256 = async (data) => {
-  // const encoder = new TextEncoder();
-  // const data = encoder.encode(message);
   const hash = crypto.subtle.digest('SHA-256', data);
   return hash;
 }
 
 export const double_sha256 = async (data) => {
-  return sha256(await sha256(data))
+  return sha256(await sha256(Uint8Array.from(data)))
 }
+
+export const checksum = async (address) => {
+  return new Uint8Array((await double_sha256(address)).slice(0, 4));
+};
 
 export const hash160 = async (data, network) => {
   let a = Uint8Array.from(data);
   // let b = await secp.utils.sha256(a);
   let b = await sha256(a);
   let c = await ripemd160(a);
-  let hash = await sha256(await sha256(c));
-  // let d = hexfrombytes(c);
-  // let e = btoa(d);
-  // let x = c.unshift(network["p2pkh"]);
-  let y = new Uint8Array(25);
-  y.set(network.p2pkh, 0);
-  y.set(c, 1);
-  y.set(hash.slice(0, 3), 21);
-  return b58lify(y);
+  return b58lify(c);
 }
 

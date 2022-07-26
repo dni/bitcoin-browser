@@ -1,5 +1,5 @@
 import opcodes from "./opcode";
-import {  hash160, b58lify, unb58lify, sha256, double_sha256 } from "./hashing";
+import {  hash160, b58lify, unb58lify, sha256, checksum, double_sha256 } from "./hashing";
 import { NET } from "./network";
 import { logger, create_enums, numberfrombyte, hextobytes, hexfrombytes } from "./helper";
 
@@ -45,7 +45,6 @@ export class Script {
       this.network = NET[network];
     }
 
-    console.log(this.network);
     if (typeof script == "string") {
       this.script = hextobytes(script);
     } else {
@@ -217,29 +216,25 @@ export class Script {
     return stack.join(" ");
   }
   async ExtractDestination() {
+      let address = [];
       switch (this.type) {
-        // case TxoutType.PUBKEY:
-        //   if (!Pubkey.IsValid(this.pubkey)) {
-        //     return false;
-        //   }
-        //   return hash160(this.pubkey);
+        case TxoutType.PUBKEY:
+          if (!Pubkey.IsValid(this.pubkey)) {
+            return false;
+          }
+          address = this.pubkey;
+          address.unshift(this.network.p2pk);
+          address.push(...(await checksum(address)))
+          return b58lify(address);
         case TxoutType.PUBKEYHASH:
-          console.log("raw", this.pubkeyhash);
-          this.address = this.pubkeyhash;
-          this.address.unshift(this.network.p2pkh);
-          console.log("after unshift", this.address);
-          // let checksum = await sha256(Uint8Array.from(this.address));
-          // this.address.push(checksum);
-          console.log("promise", this.address);
-          this.address = b58lify(this.address);
-          console.log("empty", this.address);
-          // return this.address;
-          // return hash160(this.pubkeyhash, this.network);
+          address = this.pubkeyhash;
+          address.unshift(this.network.p2pkh);
+          address.push(...(await checksum(address)))
+          return b58lify(address);
+        case TxoutType.SCRIPTHASH:
+          // addressRet = ScriptHash(uint160(vSolutions[0]));
+          return true;
       }
-      // case TxoutType.SCRIPTHASH: {
-      //     addressRet = ScriptHash(uint160(vSolutions[0]));
-      //     return true;
-      // }
       // case TxoutType.WITNESS_V0_KEYHASH: {
       //     WitnessV0KeyHash hash;
       //     std.copy(vSolutions[0].begin(), vSolutions[0].end(), hash.begin());
