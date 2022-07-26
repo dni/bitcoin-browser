@@ -1,9 +1,11 @@
 import opcodes from "./opcode";
+import { NET } from "./network";
 import { logger, numberfromhex, numberfrombytes, hexfrombytes, hextobytes } from "./helper";
 import { Script } from "./script";
 
-export class TransactionDecoder {
-  constructor(rawtx) {
+export class Transaction {
+  constructor(rawtx, network) {
+    this.network = network;
     this.rawtx = rawtx;
     this.offset = 0;
     this.vin_count = 0;
@@ -12,12 +14,15 @@ export class TransactionDecoder {
     this.tx = {
       vin: [],
       vout: [],
+      size: 0,
+      vsize: 0,
+      weight: 0,
     };
     this.decode();
     logger(this.tx);
   }
   parsescript(script){
-    let s = new Script(script);
+    let s = new Script(script, this.network);
     return {
       asm: s,
       hex: hexfrombytes(script),

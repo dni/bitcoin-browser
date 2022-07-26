@@ -1,6 +1,6 @@
 import chai from "chai";
 import { transactions } from "./data";
-import { TransactionDecoder } from "../src/transaction";
+import { Transaction } from "../src/transaction";
 
 
 transactions.forEach((tx) => {
@@ -8,7 +8,7 @@ transactions.forEach((tx) => {
   // if (i < 1) {
   //   return;
   // }
-  let decoder = new TransactionDecoder(tx.raw);
+  let decoder = new Transaction(tx.raw, tx.network);
   describe(`Decode Transaction: #${i} :: ${tx.name}`, () => {
     it('should initialize', () => {
       chai.expect(decoder).to.not.equal(null);
@@ -20,6 +20,15 @@ transactions.forEach((tx) => {
     let has_segwit = "txinwitness" in tx.data.vin[0];
     it(`decoder.tx.segwit should equal to ${has_segwit}`, () => {
       chai.expect(decoder.segwit).to.equal(has_segwit);
+    });
+    it(`decoder.tx.size should equal to ${tx.data.size}`, () => {
+      chai.expect(decoder.tx.size).to.equal(tx.data.size);
+    });
+    it(`decoder.tx.vsize should equal to ${tx.data.vsize}`, () => {
+      chai.expect(decoder.tx.vsize).to.equal(tx.data.vsize);
+    });
+    it(`decoder.tx.weight should equal to ${tx.data.weight}`, () => {
+      chai.expect(decoder.tx.weight).to.equal(tx.data.weight);
     });
     it(`decoder.vin_count should equal to ${tx.data.vin.length}`, () => {
       chai.expect(decoder.vin_count).to.equal(tx.data.vin.length);
@@ -62,9 +71,15 @@ transactions.forEach((tx) => {
           it(`scriptPubKey.hex should equal to ${output.scriptPubKey.hex}`, () => {
             chai.expect(decoder.tx.vout[j].scriptPubKey.hex).to.equal(output.scriptPubKey.hex);
           });
+          it(`scriptPubKey.address should equal to ${output.scriptPubKey.address}`, async () => {
+            chai.expect(await decoder.tx.vout[j].scriptPubKey.address).to.equal(output.scriptPubKey.address);
+          });
           it(`scriptPubKey.type should equal to ${output.scriptPubKey.type}`, () => {
             chai.expect(decoder.tx.vout[j].scriptPubKey.type).to.equal(output.scriptPubKey.type);
           });
+          // it(`scriptPubKey.asm should equal to ${output.scriptPubKey.asm}`, () => {
+          //   chai.expect(decoder.tx.vout[j].scriptPubKey.asm).to.equal(output.scriptPubKey.asm);
+          // });
         });
       });
     });

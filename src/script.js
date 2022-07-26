@@ -47,7 +47,11 @@ export class Script {
     if (network === undefined) {
       this.network = NET.main;
     } else {
-      this.network = NET[network];
+      if (network in NET) {
+        this.network = NET[network];
+      } else {
+        console.error("network does not exist", network);
+      }
     }
 
     if (typeof script == "string") {
