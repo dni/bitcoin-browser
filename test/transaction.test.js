@@ -21,15 +21,15 @@ transactions.forEach((tx) => {
     it(`decoder.tx.segwit should equal to ${has_segwit}`, () => {
       chai.expect(decoder.segwit).to.equal(has_segwit);
     });
-    it(`decoder.tx.size should equal to ${tx.data.size}`, () => {
-      chai.expect(decoder.tx.size).to.equal(tx.data.size);
-    });
-    it(`decoder.tx.vsize should equal to ${tx.data.vsize}`, () => {
-      chai.expect(decoder.tx.vsize).to.equal(tx.data.vsize);
-    });
     it(`decoder.tx.weight should equal to ${tx.data.weight}`, () => {
       chai.expect(decoder.tx.weight).to.equal(tx.data.weight);
     });
+    // it(`decoder.tx.size should equal to ${tx.data.size}`, () => {
+    //   chai.expect(decoder.tx.size).to.equal(tx.data.size);
+    // });
+    // it(`decoder.tx.vsize should equal to ${tx.data.vsize}`, () => {
+    //   chai.expect(decoder.tx.vsize).to.equal(tx.data.vsize);
+    // });
     it(`decoder.vin_count should equal to ${tx.data.vin.length}`, () => {
       chai.expect(decoder.vin_count).to.equal(tx.data.vin.length);
     });
@@ -87,15 +87,16 @@ transactions.forEach((tx) => {
     if (has_segwit) {
       describe(`Decode Witnesses: `, () => {
         tx.data.vin.forEach((input) => {
-          let j = tx.data.vin.indexOf(input);
-          describe(`Input Witness: #${j} `, () => {
+          let i = tx.data.vin.indexOf(input);
+          describe(`Input Witness: #${i} `, () => {
             it(`witness length should match to ${input.txinwitness.length}`, () => {
-              chai.expect(decoder.tx.vin[j].txinwitness.length).to.equal(input.txinwitness.length);
+              chai.expect(decoder.tx.vin[i].txinwitness.length).to.equal(input.txinwitness.length);
             });
-            tx.data.vin[0].txinwitness.forEach((witness) => {
-              let j = tx.data.vin[0].txinwitness.indexOf(witness);
+            input.txinwitness.forEach((witness) => {
+              let j = input.txinwitness.indexOf(witness);
               it(`witness hex should match to ${witness}`, () => {
-                chai.expect(decoder.tx.vin[0].txinwitness[j]).to.equal(witness);
+                console.log();
+                chai.expect(decoder.tx.vin[i].txinwitness_hex[j]).to.equal(witness);
               });
             });
           });

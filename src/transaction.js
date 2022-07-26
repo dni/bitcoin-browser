@@ -2,8 +2,13 @@ import opcodes from "./opcode";
 import { NET } from "./network";
 import { logger, numberfromhex, numberfrombytes, hexfrombytes, hextobytes } from "./helper";
 import { Script } from "./script";
+// export class Transaction {
+//   constructor(tx) {
+//     this.tx = tx
+//   }
+// }
 
-export class Transaction {
+export class Transaction{
   constructor(rawtx, network) {
     this.network = network;
     this.rawtx = rawtx;
@@ -14,13 +19,53 @@ export class Transaction {
     this.tx = {
       vin: [],
       vout: [],
-      size: 0,
-      vsize: 0,
-      weight: 0,
     };
     this.decode();
+    this.tx.weight = this.weight();
+    this.tx.vsize = this.virtualSize();
     logger(this.tx);
   }
+
+  weight() {
+    const base = this.byteLength(false);
+    const total = this.byteLength(true);
+    return base * 3 + total;
+  }
+
+  virtualSize() {
+    return Math.ceil(this.tx.weight / 4);
+  }
+
+  byteLength(allow_witness = true) {
+    let l = 0;
+    const hasWitnesses = allow_witness && this.segwit;
+
+    l += 4;                   // version
+    l += 4;                   // locktime
+    if (hasWitnesses) l += 2; // marker
+    l += this.tx.vin.length; // varint vout_count
+    l += this.tx.vout.length;// varint vin_count
+    this.tx.vin.forEach((vin) => {
+      l += 32; // txid
+      l += 4;  // vout
+      l += 4;  // sequence
+      l += vin.script.length;
+    });
+    this.tx.vout.forEach((vout) => {
+      l += 8; // amount
+      l+= 2;  // script_pub_key_size
+      l += vout.script.length;
+    });
+    if (hasWitnesses) {
+      this.tx.vin.forEach((vin) => {
+        vin.txinwitness.forEach((witness) => {
+          l += witness.length;
+        });
+      });
+    }
+    return l;
+  }
+
   parsescript(script){
     let s = new Script(script, this.network);
     return {
@@ -89,6 +134,7 @@ export class Transaction {
         let script_size = this.parsevarint();
         logger(`VarInt | input ${i} script_size: ${script_size}`,2);
         let script = this.parsebytes(script_size);
+        input.script = script;
         input.scriptSig = this.parsescript(script);
         logger(`${script_size} bytes | input ${i} scriptSig: ${input.scriptSig.hex}`, 1);
         input.sequence = this.parsebytes(4).reverse();
@@ -106,30 +152,35 @@ export class Transaction {
         let output = {
           n: i
         };
-        let output_bin = this.parsebytes(8).reverse();
-        output.value = numberfrombytes(output_bin) / 100000000;
+        let output_value_binary = this.parsebytes(8).reverse();
+        output.value = numberfrombytes(output_value_binary) / 100000000;
         logger(`8 bytes reversed | ouput ${i} value: ${output.value}`, 1);
         let script_pub_key_size = this.parsevarint();
         logger(`VarInt | output ${i} script_pub_key_size: ${script_pub_key_size}`, 2);
         let script = this.parsebytes(script_pub_key_size);
+        output.script = script;
         output.scriptPubKey = this.parsescript(script);
         logger(`${script_pub_key_size} bytes | output ${i} script_pub_key: ${output.scriptPubKey.hex}`, 1);
         this.tx.vout.push(output);
       }
     }
     if (this.segwit && this.vin_count > 0) {
-        let input = this.tx.vin[0];
-        let witness_stack = this.parsevarint();
-        if (witness_stack > 0) {
-          input.txinwitness = [];
-          for (let i = 0; i < witness_stack; i++) {
-            let witness_length = this.parsevarint();
-            let witness = this.parsebytes(witness_length);
-            let witness_hex = hexfrombytes(witness);
-            input.txinwitness.push(witness_hex);
-            logger(`${witness_length} bytes | input ${0} txwitness: ${witness_hex}`, 1);
+        this.tx.vin.forEach((input) => {
+          let witness_stack = this.parsevarint();
+          if (witness_stack > 0) {
+            input.txinwitness = [];
+            input.txinwitness_hex = [];
+            for (let i = 0; i < witness_stack; i++) {
+              let witness_length = this.parsevarint();
+              let witness = this.parsebytes(witness_length);
+              input.txinwitness.push(witness);
+              let witness_hex = hexfrombytes(witness);
+              input.txinwitness_hex.push(witness_hex);
+
+              logger(`${witness_length} bytes | input ${0} txwitness: ${witness_hex}`, 1);
+            }
           }
-        }
+        });
     }
     this.tx.locktime = parseInt(this.parsebytes(4).reverse().join(""));
     logger(`4 bytes reversed | locktime: ${this.tx.locktime}`, 1);
