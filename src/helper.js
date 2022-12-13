@@ -31,6 +31,9 @@ export const hexfrombytes = (bytes) => {
   }
   return hex;
 }
+export const hexfromnumber = (n) => {
+  return n.toString(16).padStart(2, 0);
+}
 
 export const numberfromhex = (hex) => {
   return parseInt(hex, 16);
